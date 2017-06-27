@@ -30,8 +30,8 @@ def formula_to_png(formules, background = 'White', density = 700)
   return arr_images
 end
 
-def parse_tex_file docx_path
-  arr_path_filename = File.split(docx_path)
+def parse_tex_file input_file_path, output_file_path
+  arr_path_filename = File.split(input_file_path)
   outdir = arr_path_filename[0]
   docx_file = arr_path_filename[1]
 
@@ -82,7 +82,14 @@ def parse_tex_file docx_path
   # end
   # --CHECK--
 
-  imgages = formula_to_png(formules)
+  images = formula_to_png(formules)
+
+  result = []
+  images.length.times do |i|
+    result << {img_path: images[i], text: formules[i]}
+  end
+
+  puts result
 
 
   # delete .odt and .tex files
@@ -90,6 +97,6 @@ def parse_tex_file docx_path
   File.delete(tex_path) if File.exists?(tex_path)
 end
 
-formules = parse_tex_file '/home/sergei/Programs/Work/plagiarizm/formula-parser/4.docx'
+formules = parse_tex_file '/home/sergei/Programs/Work/plagiarizm/formula-parser/4.docx', '/home/sergei/Programs/Work/plagiarizm/formula-parser/output.docx'
 
 
