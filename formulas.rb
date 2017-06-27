@@ -4,11 +4,11 @@ require 'digest'
 # Renders expression to PNG image using <tt>latex</tt> and
 # <tt>dvipng</tt>
 # returns array to images
-def formula_to_png(formules, background = 'White', density = 700)
+def formula_to_png(formulas, background = 'White', density = 700)
   arr_images = []
   temp_path = Dir.mktmpdir
   Dir.chdir(temp_path) do
-    formules.each do |formula|
+    formulas.each do |formula|
       rand_word = ('a'..'z').to_a.shuffle.join
       sha1 = Digest::SHA1.hexdigest rand_word
       File.open("#{sha1}.tex", 'w') do |f|
@@ -56,15 +56,15 @@ def parse_tex_file input_file_path, output_file_path
   # convert_odt_to_tex = IO.popen(["w2l", odt_path, tex_path])
   # convert_odt_to_tex.close
 
-  # create array with formules
+  # create array with formulas
   tex_text = File.read(tex_path)
   tex_text.gsub!(/\s+/, "")
-  formules = []
+  formulas = []
   arr1 = tex_text.scan(/\$(.*?)\$/im)
   unless arr1.empty?
     arr1.each do |level_1|
       level_1.each do |level_2|
-        formules << level_2
+        formulas << level_2
       end
     end
   end
@@ -72,21 +72,21 @@ def parse_tex_file input_file_path, output_file_path
   unless arr2.empty?
     arr2.each do |level_1|
       level_1.each do |level_2|
-        formules << level_2
+        formulas << level_2
       end
     end
   end
   # --CHECK--
-  # formules.each do |str|
+  # formulas.each do |str|
   #   puts str
   # end
   # --CHECK--
 
-  images = formula_to_png(formules)
+  images = formula_to_png(formulas)
 
   result = []
   images.length.times do |i|
-    result << {img_path: images[i], text: formules[i]}
+    result << {img_path: images[i], text: formulas[i]}
   end
 
   puts result
@@ -97,6 +97,6 @@ def parse_tex_file input_file_path, output_file_path
   File.delete(tex_path) if File.exists?(tex_path)
 end
 
-formules = parse_tex_file '/home/sergei/Programs/Work/plagiarizm/formula-parser/4.docx', '/home/sergei/Programs/Work/plagiarizm/formula-parser/output.docx'
+formulas = parse_tex_file '/home/sergei/Programs/Work/plagiarizm/formula-parser/4.docx', '/home/sergei/Programs/Work/plagiarizm/formula-parser/output.docx'
 
 
